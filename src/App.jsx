@@ -46,8 +46,8 @@ const App = () => {
 
 
   return (
-    <div className='h-screen bg-black text-white'>
-      <form onSubmit={(e) => {
+<div className="bg-black text-white">
+        <form onSubmit={(e) => {
         submitHandler(e)
       }} className='px-2 py-2 flex flex-wrap'>
 
