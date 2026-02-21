@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Card from './components/Card'
 
 const App = () => {
@@ -8,12 +8,19 @@ const App = () => {
   const [imageURL, setImageURL] = useState('')
   const [userDesc, setUserDesc] = useState('')
 
-  const [allUsers, setAllUsers] = useState([])
+  const localData = JSON.parse(localStorage.getItem('all-users')) || []
+
+  const [allUsers, setAllUsers] = useState(localData)
 
   const submitHandler = (e) => {
     e.preventDefault()
 
-    setAllUsers([...allUsers, { userName, userRole, userDesc, imageURL }])
+    const oldUsers = [...allUsers];
+
+    oldUsers.push({ userName, userRole, userDesc, imageURL })
+
+    setAllUsers(oldUsers)
+    localStorage.setItem('all-users',JSON.stringify(oldUsers))
 
     setUserName('')
     setUserRole('')
@@ -24,24 +31,32 @@ const App = () => {
   const deleteHandler = (idx) => {
     const copyUsers = [...allUsers]
 
-    copyUsers.splice(idx, 1)
+    const conf = confirm('Are you really want to delete this element?')
+
+    if(conf){
+      copyUsers.splice(idx, 1)
+    }else{
+      alert('element Not Deleted')
+    }
 
     setAllUsers(copyUsers)
+    localStorage.setItem('all-users',JSON.stringify(copyUsers))
+
   }
 
 
   return (
-<div className='min-h-screen bg-black text-white flex flex-col'>    
-        <form onSubmit={(e) => {
+    <div className='h-screen bg-black text-white'>
+      <form onSubmit={(e) => {
         submitHandler(e)
-      }} className='px-2 py-2 flex flex-wrap gap-6  '>
+      }} className='px-2 py-2 flex flex-wrap'>
 
         <input
           value={userName}
           onChange={(e) => {
             setUserName(e.target.value)
           }}
-          className='border-2 text-xl font-semibold px-5 py-2 rounded m-2 lg:w-[40%]'
+          className='border-2 text-xl font-semibold px-5 py-2 rounded m-2 lg:w-[48%]'
           type="text"
           placeholder='Enter your name' />
 
@@ -50,7 +65,7 @@ const App = () => {
           onChange={(e) => {
             setImageURL(e.target.value)
           }}
-          className='border-2 text-xl font-semibold px-5 py-2 rounded m-2 lg:w-[40%]'
+          className='border-2 text-xl font-semibold px-5 py-2 rounded m-2 lg:w-[48%]'
           type="text"
           placeholder='Image URL' />
 
@@ -59,7 +74,7 @@ const App = () => {
           onChange={(e) => {
             setUserRole(e.target.value)
           }}
-          className='border-2 text-xl font-semibold px-5 py-2 rounded m-2 lg:w-[40%]'
+          className='border-2 text-xl font-semibold px-5 py-2 rounded m-2 lg:w-[48%]'
           type="text"
           placeholder='Enter Role' />
 
@@ -68,7 +83,7 @@ const App = () => {
           onChange={(e) => {
             setUserDesc(e.target.value)
           }}
-          className='border-2 text-xl font-semibold px-5 py-2 rounded m-2 lg:w-[40%]'
+          className='border-2 text-xl font-semibold px-5 py-2 rounded m-2 lg:w-[48%]'
           type="text"
           placeholder='Enter Description' />
 
